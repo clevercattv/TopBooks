@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
-@Component // todo requestFromQuery move to another class | remove this class (move all in interface)
+@Component
 public abstract class BasicClientImpl implements BasicClient {
 
     protected final ResponseErrorHandler errorHandler;
@@ -28,7 +28,7 @@ public abstract class BasicClientImpl implements BasicClient {
     public <T> Optional<T> call(String query, HttpMethod httpMethod, Object... queryVariables) {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setErrorHandler(errorHandler);
-        ResponseEntity<T> exchange = restTemplate.exchange(requestFromQuery(query), httpMethod,
+        ResponseEntity<T> exchange = restTemplate.exchange(query, httpMethod,
                 null, new ParameterizedTypeReference<T>() {
                 }, queryVariables);
         if (exchange.getStatusCode().isError()) {
@@ -36,7 +36,5 @@ public abstract class BasicClientImpl implements BasicClient {
         }
         return Optional.ofNullable(exchange.getBody());
     }
-
-    protected abstract String requestFromQuery(String query);
 
 }

@@ -39,7 +39,7 @@ public class Book implements Serializable {
     private LocalDateTime creationTime;
     private LocalDateTime lastModifiedTime;
 
-    @ManyToMany(mappedBy = "books")
+    @ManyToMany
     private List<Author> authors;
 
 }
