@@ -1,36 +1,29 @@
 package com.clevercattv.top.book.service;
 
-import com.clevercattv.top.book.client.BasicClient;
-import com.clevercattv.top.book.entity.Book;
+import com.clevercattv.top.book.client.facade.ExternalApiFacade;
+import com.clevercattv.top.book.dto.BookResponse;
+import com.clevercattv.top.book.entity.ClientType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class SearchService {
 
-    private final Map<String, BasicClient> clients;
+    private final ExternalApiFacade apiFacade;
 
-    public List<Book> findBooks(String query, List<String> clientEndpoints) {
-        return clients.entrySet().parallelStream()
-                .filter(entry -> clientEndpoints.contains(entry.getKey()))
-                .map(Map.Entry::getValue)
-                .map(client -> client.<List<Book>>call(query))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .reduce(new ArrayList<>(), this::joinLists);
+    public List<BookResponse> findAllByAnyField(String search, Pageable pageable) {
+        return apiFacade.findAllByAnyField(search, pageable);
     }
 
-    private List<Book> joinLists(List<Book> mainList, List<Book> secondaryList) {
-        mainList.addAll(secondaryList);
-        return mainList;
+    public List<BookResponse> findAllByOrderByDateDesc(Pageable pageable) {
+        return apiFacade.findAllByOrderByDateDesc(pageable);
     }
 
+    public BookResponse findDetailedById(String id, ClientType type) {
+        return apiFacade.findDetailedById(id, type);
+    }
 }
