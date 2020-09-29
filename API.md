@@ -12,6 +12,6 @@
 * filesize -- the size of the file in bytes
 * extension -- the extension of the file (.pdf, .epub, .mobi, etc.)
 * timeadded -- the date/time when the text was added to the database, formatted as YYYY-MM-DD HH:MM:SS
-* timelastmodifie**d -- the date/time when the text's entry in the database was edited, formatted as YYYY-MM-DD HH:MM:SS
+* timelastmodified -- the date/time when the text's entry in the database was edited, formatted as YYYY-MM-DD HH:MM:SS
 * coverurl -- the path to the cover image for the text: the filename followed by a lowercase letter (there's a function to determine the letter for each cover, but I don't know enough PHP to understand it).
 
