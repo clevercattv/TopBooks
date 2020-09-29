@@ -3,7 +3,7 @@ package com.clevercattv.top.book.dto;
 import lombok.Data;
 
 @Data
-public class GoodReadsBookResponse {
+public class GoodReadsResponse {
 // https://www.goodreads.com/api (need oAuth)
 
 }

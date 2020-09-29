@@ -3,7 +3,7 @@ package com.clevercattv.top.book.dto;
 import lombok.Data;
 
 @Data
-public class BookBrainzBookResponse {
+public class BookBrainzResponse {
 // https://bookbrainz.org/develop
 
     private String bbid;
@@ -18,6 +18,7 @@ public class BookBrainzBookResponse {
     private String ended;
     private String gender;
 
+    @Data
     class DefaultAlias {
         private String language;
         private String name;
