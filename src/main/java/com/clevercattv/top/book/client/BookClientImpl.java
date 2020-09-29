@@ -1,0 +1,53 @@
+package com.clevercattv.top.book.client;
+
+import com.clevercattv.top.book.dto.BookResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.GenericTypeResolver;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.ResponseErrorHandler;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+import java.util.Optional;
+
+@Component
+public abstract class BookClientImpl<T extends BookResponse> implements BookClient<T> {
+
+    protected final ObjectMapper objectMapper;
+    protected final RestTemplate restTemplate;
+    private final Class<T> actualTypeArgument;
+
+    @SuppressWarnings("unchecked")
+    public BookClientImpl(@Qualifier("basicClientErrorHandler") ResponseErrorHandler errorHandler,
+                          RestTemplate restTemplate,
+                          ObjectMapper objectMapper) {
+        this.restTemplate = restTemplate;
+        this.objectMapper = objectMapper;
+        actualTypeArgument = (Class<T>) GenericTypeResolver.resolveTypeArgument(getClass(), BookClientImpl.class);
+
+        restTemplate.setErrorHandler(errorHandler);
+    }
+
+    @Override
+    public Optional<T> call(String query, HttpMethod httpMethod,
+                            HttpEntity<?> requestEntity, Object... queryVariables) {
+        return Optional.ofNullable(
+                restTemplate.exchange(query, httpMethod, requestEntity, actualTypeArgument, queryVariables)
+                        .getBody()
+        );
+    }
+
+    @Override
+    public <R> Optional<List<R>> batchCall(String query, HttpMethod httpMethod, HttpEntity<?> requestEntity, Object... queryVariables) {
+        return Optional.ofNullable(
+                restTemplate.exchange(query, httpMethod, requestEntity, new ParameterizedTypeReference<List<R>>() {
+                }, queryVariables)
+                        .getBody()
+        );
+    }
+
+}

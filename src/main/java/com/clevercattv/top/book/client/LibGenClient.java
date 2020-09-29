@@ -1,29 +1,45 @@
 package com.clevercattv.top.book.client;
 
-import com.clevercattv.top.book.client.util.QueryConverter;
+import com.clevercattv.top.book.dto.LibGenResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResponseErrorHandler;
+import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 @Getter
-@Component
-public class LibGenClient extends BasicClientImpl {
+@Component("libGenClient")
+public class LibGenClient extends BookClientImpl<LibGenResponse> {
 
-    private static final String ENDPOINT = "http://libgen.rs/json.php";
-    private final QueryConverter converter;
+    private static final String ENDPOINT = "http://libgen.rs/json.php" +
+            "?fields=title,author,year,publisher,pages,language,coverurl" +
+            "&limit1=%s" +
+            "&limit2=%s" +
+            "&mode=last" +
+            "&timefirst=%s";
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public LibGenClient(@Qualifier("libGenClientErrorHandler") ResponseErrorHandler errorHandler,
-                        @Qualifier("libGenQueryConverter") QueryConverter converter) {
-        super(errorHandler);
-        this.converter = converter;
+                        RestTemplate restTemplate,
+                        ObjectMapper objectMapper) {
+        super(errorHandler, restTemplate, objectMapper);
     }
 
     @Override
-    public <T> Optional<T> call(String query) {
-        return super.call(converter.fromQuery(String.format("%s%s", ENDPOINT, query)));
+    public Optional<LibGenResponse> last(Pageable pageable) {
+        Optional<List<LibGenResponse.Book>> booksOptional = batchCall(String.format(ENDPOINT,
+                pageable.getOffset(),
+                pageable.getPageSize(),
+                LocalDate.now().format(formatter)
+        ));
+        return booksOptional.map(LibGenResponse::new);
     }
 
 }
