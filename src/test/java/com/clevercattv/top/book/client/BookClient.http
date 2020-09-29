@@ -1,6 +1,11 @@
-GET http://localhost:8080/book
+GET http://localhost:8080/search?search=MongoDb
 
 ###
 
-GET http://localhost:8080/book/test
+GET http://localhost:8080/last
 
+###
+
+GET http://localhost:8080/detailed?id=1001601301730&type=IT_BOOK
+
+###
