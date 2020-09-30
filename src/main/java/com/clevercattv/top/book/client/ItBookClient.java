@@ -3,8 +3,9 @@ package com.clevercattv.top.book.client;
 import com.clevercattv.top.book.dto.ItBookDetailedResponse;
 import com.clevercattv.top.book.dto.ItBookResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,14 +16,18 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
-@Getter
 @Component("itBookClient")
+@PropertySource(value = "classpath:client.properties")
 public class ItBookClient extends BookClientImpl<ItBookResponse> {
 
-    private static final String API_URL = "https://api.itbook.store/1.0";
-    private static final String SEARCH_ENDPOINT = API_URL + "/search/%s";
-    private static final String DETAILED_ENDPOINT = API_URL + "/books/%s";
-    private static final String LAST_ENDPOINT = API_URL + "/new";
+    @Value("${ItBook.url}${ItBook.endpoints.search}")
+    private String searchEndpoint;
+
+    @Value("${ItBook.url}${ItBook.endpoints.detailed}")
+    private String detailedEndpoint;
+
+    @Value("${ItBook.url}${ItBook.endpoints.last}")
+    private String lastEndpoint;
 
     private final HttpEntity<String> requestEntity;
 
@@ -45,14 +50,14 @@ public class ItBookClient extends BookClientImpl<ItBookResponse> {
      */
     @Override
     public Optional<ItBookResponse> search(String searchParam, Pageable pageable) {
-        return call(String.format(SEARCH_ENDPOINT, searchParam), HttpMethod.GET, requestEntity);
+        return call(String.format(searchEndpoint, searchParam), HttpMethod.GET, requestEntity);
     }
 
-    @Override // todo[FIX] unchecked conversion
+    @Override // todo[FIX] unchecked conversion <R> to <ItBookDetailedResponse>
     @SuppressWarnings("unchecked")
     public Optional<ItBookDetailedResponse> detailed(String searchParam) {
         return Optional.ofNullable(
-                restTemplate.exchange(String.format(DETAILED_ENDPOINT, searchParam),
+                restTemplate.exchange(String.format(detailedEndpoint, searchParam),
                         HttpMethod.GET, requestEntity, ItBookDetailedResponse.class).getBody()
         );
     }
@@ -64,7 +69,10 @@ public class ItBookClient extends BookClientImpl<ItBookResponse> {
      */
     @Override
     public Optional<ItBookResponse> last(Pageable pageable) {
-        return call(LAST_ENDPOINT, HttpMethod.GET, requestEntity);
+        if (pageable.getPageNumber() != 0) {
+            return Optional.empty();
+        }
+        return call(lastEndpoint, HttpMethod.GET, requestEntity);
     }
 
 }

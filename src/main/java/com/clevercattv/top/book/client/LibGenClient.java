@@ -2,8 +2,9 @@ package com.clevercattv.top.book.client;
 
 import com.clevercattv.top.book.dto.LibGenResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResponseErrorHandler;
@@ -14,16 +15,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
-@Getter
 @Component("libGenClient")
+@PropertySource(value = "classpath:client.properties")
 public class LibGenClient extends BookClientImpl<LibGenResponse> {
 
-    private static final String ENDPOINT = "http://libgen.rs/json.php" +
-            "?fields=title,author,year,publisher,pages,language,coverurl" +
-            "&limit1=%s" +
-            "&limit2=%s" +
-            "&mode=last" +
-            "&timefirst=%s";
+    @Value("${LibGen.url}${LibGen.endpoints.last}")
+    private String lastEndpoint;
+
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public LibGenClient(@Qualifier("libGenClientErrorHandler") ResponseErrorHandler errorHandler,
@@ -34,7 +32,7 @@ public class LibGenClient extends BookClientImpl<LibGenResponse> {
 
     @Override
     public Optional<LibGenResponse> last(Pageable pageable) {
-        Optional<List<LibGenResponse.Book>> booksOptional = batchCall(String.format(ENDPOINT,
+        Optional<List<LibGenResponse.Book>> booksOptional = batchCall(String.format(lastEndpoint,
                 pageable.getOffset(),
                 pageable.getPageSize(),
                 LocalDate.now().format(formatter)
