@@ -51,7 +51,7 @@ public class ItBookClient extends BookClientImpl<ItBookResponse> {
         return call(String.format(searchEndpoint, searchParam), HttpMethod.GET, requestEntity);
     }
 
-    @Override // todo[FIX] unchecked conversion <R> to <ItBookDetailedResponse>
+    @Override // todo[IMPROVEMENT] unchecked conversion <R> to <ItBookDetailedResponse>
     @SuppressWarnings("unchecked")
     public Optional<ItBookDetailedResponse> detailed(String searchParam) {
         return Optional.ofNullable(

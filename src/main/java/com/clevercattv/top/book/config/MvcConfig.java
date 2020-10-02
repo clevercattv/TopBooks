@@ -69,7 +69,7 @@ public class MvcConfig implements WebMvcConfigurer {
         return new ObjectMapper();
     }
 
-    @Bean
+    @Bean // todo[IMPROVEMENT] try to find better solution
     @Qualifier("externalApiFacadeClients")
     public Map<String, BookClient<BookResponse>> externalApiFacadeClients(
             Map<String, BookClient<? extends BookResponse>> clients) {
