@@ -1,4 +1,4 @@
-package com.clevercattv.top.book.client.facade;
+package com.clevercattv.top.book.service.facade;
 
 import com.clevercattv.top.book.dto.BookResponse;
 import com.clevercattv.top.book.entity.ClientType;

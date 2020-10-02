@@ -1,10 +1,11 @@
-package com.clevercattv.top.book.client.facade;
+package com.clevercattv.top.book.service.facade;
 
 import com.clevercattv.top.book.client.BookClient;
 import com.clevercattv.top.book.dto.BookResponse;
 import com.clevercattv.top.book.entity.ClientType;
 import com.clevercattv.top.book.exception.NoSuchDetailedMessageException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
@@ -18,8 +19,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ExternalApiFacadeImpl implements ExternalApiFacade {
 
-    // BookClient<BookResponse> didn't inject child classes
-    private final Map<String, BookClient<? extends BookResponse>> clients;
+    @Qualifier("externalApiFacadeClients")
+    private final Map<String, BookClient<BookResponse>> clients;
 
     @Override
     public BookResponse findDetailedById(String id, ClientType type) {

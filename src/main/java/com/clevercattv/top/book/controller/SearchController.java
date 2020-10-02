@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Api(description = "Searching books on external API", produces = "application/json")
@@ -21,18 +22,24 @@ public class SearchController {
     private final SearchService service;
 
     @GetMapping("/search")
-    public List<BookResponse> findAllByAnyField(@RequestParam String search, @PageableDefault Pageable pageable) {
+    public List<BookResponse> findAllByAnyField(
+            @RequestParam @NotBlank String search,
+            @PageableDefault Pageable pageable) {
         return service.findAllByAnyField(search, pageable);
     }
 
     @GetMapping("/last")
-    public List<BookResponse> findAllByOrderByDateDesc(@PageableDefault Pageable pageable) {
+    public List<BookResponse> findAllByOrderByDateDesc(
+            @PageableDefault Pageable pageable) {
         return service.findAllByOrderByDateDesc(pageable);
     }
 
     @GetMapping("/detailed")
-    public BookResponse findDetailedById(@RequestParam("id") String id, @RequestParam("type") ClientType type) {
+    public BookResponse findDetailedById(
+            @RequestParam @NotBlank String id,
+            @RequestParam ClientType type) {
         return service.findDetailedById(id, type);
     }
+
 
 }

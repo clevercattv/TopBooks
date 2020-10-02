@@ -1,6 +1,6 @@
 package com.clevercattv.top.book.service;
 
-import com.clevercattv.top.book.client.facade.ExternalApiFacade;
+import com.clevercattv.top.book.service.facade.ExternalApiFacade;
 import com.clevercattv.top.book.dto.BookResponse;
 import com.clevercattv.top.book.entity.ClientType;
 import lombok.RequiredArgsConstructor;
