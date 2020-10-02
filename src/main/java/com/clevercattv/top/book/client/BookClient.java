@@ -5,10 +5,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 
-import java.util.List;
 import java.util.Optional;
 
-public interface BookClient<T extends BookResponse> {
+public interface BookClient<T> {
 
     default Optional<T> last(Pageable pageable) {
         return Optional.empty();
@@ -31,15 +30,5 @@ public interface BookClient<T extends BookResponse> {
     }
 
     Optional<T> call(String query, HttpMethod httpMethod, HttpEntity<?> requestEntity, Object... queryVariables);
-
-    default <R> Optional<List<R>> batchCall(String query) {
-        return batchCall(query, HttpMethod.GET);
-    }
-
-    default <R> Optional<List<R>> batchCall(String query, HttpMethod httpMethod, Object... queryVariables) {
-        return batchCall(query, httpMethod, null, queryVariables);
-    }
-
-    <R> Optional<List<R>> batchCall(String query, HttpMethod httpMethod, HttpEntity<?> requestEntity, Object... queryVariables);
 
 }

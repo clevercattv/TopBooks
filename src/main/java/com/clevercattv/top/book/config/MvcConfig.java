@@ -1,6 +1,9 @@
 package com.clevercattv.top.book.config;
 
+import com.clevercattv.top.book.client.BookClient;
+import com.clevercattv.top.book.dto.BookResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +22,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Configuration
 @EnableWebMvc
@@ -55,13 +60,22 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Bean
     @Scope("prototype")
-    public RestTemplate restTemplate(){
+    public RestTemplate restTemplate() {
         return new RestTemplate();
     }
 
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
+    }
+
+    @Bean
+    @Qualifier("externalApiFacadeClients")
+    public Map<String, BookClient<BookResponse>> externalApiFacadeClients(
+            Map<String, BookClient<? extends BookResponse>> clients) {
+        HashMap<String, BookClient<BookResponse>> resultMap = new HashMap<>();
+        clients.forEach((key, value) -> resultMap.put(key, (BookClient<BookResponse>) value));
+        return resultMap;
     }
 
 }

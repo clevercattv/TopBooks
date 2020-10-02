@@ -2,7 +2,6 @@ package com.clevercattv.top.book.client;
 
 import com.clevercattv.top.book.dto.ItBookDetailedResponse;
 import com.clevercattv.top.book.dto.ItBookResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -32,9 +31,8 @@ public class ItBookClient extends BookClientImpl<ItBookResponse> {
     private final HttpEntity<String> requestEntity;
 
     public ItBookClient(@Qualifier("itBookClientErrorHandler") ResponseErrorHandler errorHandler,
-                        RestTemplate restTemplate,
-                        ObjectMapper objectMapper) {
-        super(errorHandler, restTemplate, objectMapper);
+                        RestTemplate restTemplate) {
+        super(errorHandler, restTemplate);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("user-agent", "Application");

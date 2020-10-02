@@ -1,11 +1,12 @@
 package com.clevercattv.top.book.client;
 
 import com.clevercattv.top.book.dto.LibGenResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
@@ -25,19 +26,20 @@ public class LibGenClient extends BookClientImpl<LibGenResponse> {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public LibGenClient(@Qualifier("libGenClientErrorHandler") ResponseErrorHandler errorHandler,
-                        RestTemplate restTemplate,
-                        ObjectMapper objectMapper) {
-        super(errorHandler, restTemplate, objectMapper);
+                        RestTemplate restTemplate) {
+        super(errorHandler, restTemplate);
     }
 
     @Override
     public Optional<LibGenResponse> last(Pageable pageable) {
-        Optional<List<LibGenResponse.Book>> booksOptional = batchCall(String.format(lastEndpoint,
+        String query = String.format(lastEndpoint,
                 pageable.getOffset(),
                 pageable.getPageSize(),
                 LocalDate.now().format(formatter)
-        ));
-        return booksOptional.map(LibGenResponse::new);
+        );
+        return Optional.ofNullable(restTemplate.exchange(
+                query, HttpMethod.GET, null, new ParameterizedTypeReference<List<LibGenResponse.Book>>() {
+                }).getBody()).map(LibGenResponse::new);
     }
 
 }
