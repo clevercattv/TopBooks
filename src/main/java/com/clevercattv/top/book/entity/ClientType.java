@@ -17,4 +17,9 @@ public enum ClientType {
         this.clientName = clientName;
     }
 
+    @Override
+    public String toString() {
+        return name();
+    }
+
 }

@@ -34,13 +34,28 @@ public class ExternalApiFacadeImpl implements ExternalApiFacade {
     }
 
     @Override
+    public List<BookResponse> findAllRandomBooks(Pageable pageable, List<ClientType> clientTypes) {
+        return null;
+    }
+
+    @Override
     public List<BookResponse> findAllByAnyField(String searchParam, Pageable pageable) {
         return getBookResponses(client -> client.search(searchParam, pageable));
     }
 
     @Override
+    public List<BookResponse> findAllByAnyField(String searchParam, Pageable pageable, List<ClientType> clientTypes) {
+        return getBookResponses(clientTypes, client -> client.search(searchParam, pageable));
+    }
+
+    @Override
     public List<BookResponse> findAllByOrderByDateDesc(Pageable pageable) {
         return getBookResponses(client -> client.last(pageable));
+    }
+
+    @Override
+    public List<BookResponse> findAllByOrderByDateDesc(Pageable pageable, List<ClientType> clientTypes) {
+        return getBookResponses(clientTypes, client -> client.last(pageable));
     }
 
     private List<BookResponse> getBookResponses(
@@ -51,6 +66,25 @@ public class ExternalApiFacadeImpl implements ExternalApiFacade {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
+    }
+
+    private List<BookResponse> getBookResponses(
+            List<ClientType> clientTypes,
+            Function<BookClient<? extends BookResponse>, Optional<? extends BookResponse>> function) {
+        return clients.entrySet()
+                .parallelStream()
+                .filter(entry -> containsClient(entry.getKey(), clientTypes))
+                .map(Map.Entry::getValue)
+                .map(function)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+    }
+
+    private boolean containsClient(String name, List<ClientType> clientTypes) {
+        return clientTypes.stream()
+                .map(ClientType::getClientName)
+                .anyMatch(clientName -> clientName.equals(name));
     }
 
 }

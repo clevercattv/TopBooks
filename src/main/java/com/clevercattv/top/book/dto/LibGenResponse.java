@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -24,7 +23,7 @@ public class LibGenResponse extends BookResponse {
     public static class Book {
         private String title;
         private String author;
-        private LocalDate year;
+        private String year;
         private String publisher;
         private Integer pages;
         private String language;
