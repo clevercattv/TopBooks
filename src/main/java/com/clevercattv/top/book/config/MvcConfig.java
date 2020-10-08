@@ -1,12 +1,13 @@
 package com.clevercattv.top.book.config;
 
 import com.clevercattv.top.book.client.BookClient;
-import com.clevercattv.top.book.dto.BookResponse;
+import com.clevercattv.top.book.dto.client.BookResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.web.client.RestTemplate;
@@ -29,8 +30,9 @@ import java.util.Map;
 @Configuration
 @EnableWebMvc
 @EnableSwagger2
+@EnableAspectJAutoProxy
 @ComponentScan({"com.clevercattv.top.book.controller", "com.clevercattv.top.book.service",
-        "com.clevercattv.top.book.client", "com.clevercattv.top.book.exception"})
+        "com.clevercattv.top.book.aspect", "com.clevercattv.top.book.client", "com.clevercattv.top.book.exception"})
 public class MvcConfig implements WebMvcConfigurer {
 
     @Override
