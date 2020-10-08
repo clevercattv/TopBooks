@@ -3,10 +3,10 @@ package com.clevercattv.top.book.config;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -36,7 +36,7 @@ import static org.hibernate.cfg.AvailableSettings.USE_SQL_COMMENTS;
 
 @Configuration
 @PropertySource("classpath:application.properties")
-@ComponentScan("com.clevercattv.top.book.repository")
+@EnableJpaRepositories("com.clevercattv.top.book.repository")
 @RequiredArgsConstructor
 public class DatabaseConfig {
 

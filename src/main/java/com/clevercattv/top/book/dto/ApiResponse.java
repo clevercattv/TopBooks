@@ -24,7 +24,11 @@ public class ApiResponse<T> {
         errors = Collections.emptyList();
     }
 
-    public static <T> ApiResponse<List<T>> multipleResponse() {
+    public static <T> ApiResponse<T> ok(T body) {
+        return new ApiResponse<>(Collections.emptyList(), body);
+    }
+
+    public static <T> ApiResponse<List<T>> emptyList() {
         return new ApiResponse<>(new ArrayList<>(), new ArrayList<>());
     }
 

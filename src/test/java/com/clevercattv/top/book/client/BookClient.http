@@ -2,6 +2,10 @@ GET http://localhost:8080/search?search=MongoDb
 
 ###
 
+GET http://localhost:8080/search?search=MongoDb&clientTypes=IT_BOOK
+
+###
+
 GET http://localhost:8080/last
 
 ###
@@ -9,3 +13,6 @@ GET http://localhost:8080/last
 GET http://localhost:8080/detailed?id=1001601301730&type=IT_BOOK
 
 ###
+
+GET http://localhost:8080/client
+

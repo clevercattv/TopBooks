@@ -67,7 +67,7 @@ public class ExternalApiFacadeImpl implements ExternalApiFacade {
                 .map(function)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .reduce(ApiResponse.multipleResponse(), this::accumulateResponses, this::combineResponses);
+                .reduce(ApiResponse.emptyList(), this::accumulateResponses, this::combineResponses);
     }
 
     private ApiResponse<List<BookResponse>> getBookResponses(
@@ -80,7 +80,7 @@ public class ExternalApiFacadeImpl implements ExternalApiFacade {
                 .map(function)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .reduce(ApiResponse.multipleResponse(), this::accumulateResponses, this::combineResponses);
+                .reduce(ApiResponse.emptyList(), this::accumulateResponses, this::combineResponses);
     }
 
     private boolean containsClient(String name, List<ClientType> clientTypes) {
