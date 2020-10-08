@@ -9,10 +9,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Entity
@@ -33,11 +35,14 @@ public class Book implements Serializable {
     private String note; // user own notes (like : buy this book | good one and ect.)
     private String language;
     private String image;
-    private Long pages;
+    private Integer pages;
     private LocalDate year;
 
     private LocalDateTime creationTime;
     private LocalDateTime lastModifiedTime;
+
+    @ManyToOne
+    private User user;
 
     @ManyToMany
     private List<Author> authors;

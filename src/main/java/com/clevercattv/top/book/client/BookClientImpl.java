@@ -1,6 +1,7 @@
 package com.clevercattv.top.book.client;
 
-import com.clevercattv.top.book.dto.BookResponse;
+import com.clevercattv.top.book.dto.ApiResponse;
+import com.clevercattv.top.book.dto.client.BookResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.http.HttpEntity;
@@ -27,12 +28,12 @@ public abstract class BookClientImpl<T extends BookResponse> implements BookClie
     }
 
     @Override
-    public Optional<T> call(String query, HttpMethod httpMethod,
-                            HttpEntity<?> requestEntity, Object... queryVariables) {
+    public Optional<ApiResponse<T>> call(String query, HttpMethod httpMethod,
+                                      HttpEntity<?> requestEntity) {
         return Optional.ofNullable(
-                restTemplate.exchange(query, httpMethod, requestEntity, actualTypeArgument, queryVariables)
+                restTemplate.exchange(query, httpMethod, requestEntity, actualTypeArgument)
                         .getBody()
-        );
+        ).map(ApiResponse::new);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.clevercattv.top.book.dto;
+package com.clevercattv.top.book.dto.client;
 
 import com.clevercattv.top.book.entity.ClientType;
 import lombok.Data;

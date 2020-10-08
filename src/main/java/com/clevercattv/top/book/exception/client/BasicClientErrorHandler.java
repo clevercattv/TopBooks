@@ -1,6 +1,5 @@
 package com.clevercattv.top.book.exception.client;
 
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;

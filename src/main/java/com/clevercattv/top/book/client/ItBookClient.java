@@ -1,7 +1,8 @@
 package com.clevercattv.top.book.client;
 
-import com.clevercattv.top.book.dto.ItBookDetailedResponse;
-import com.clevercattv.top.book.dto.ItBookResponse;
+import com.clevercattv.top.book.dto.ApiResponse;
+import com.clevercattv.top.book.dto.client.ItBookDetailedResponse;
+import com.clevercattv.top.book.dto.client.ItBookResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -47,17 +48,17 @@ public class ItBookClient extends BookClientImpl<ItBookResponse> {
      * @return BookResponse
      */
     @Override
-    public Optional<ItBookResponse> search(String searchParam, Pageable pageable) {
+    public Optional<ApiResponse<ItBookResponse>> search(String searchParam, Pageable pageable) {
         return call(String.format(searchEndpoint, searchParam), HttpMethod.GET, requestEntity);
     }
 
     @Override // todo[IMPROVEMENT] unchecked conversion <R> to <ItBookDetailedResponse>
     @SuppressWarnings("unchecked")
-    public Optional<ItBookDetailedResponse> detailed(String searchParam) {
+    public Optional<ApiResponse<ItBookDetailedResponse>> detailed(String searchParam) {
         return Optional.ofNullable(
                 restTemplate.exchange(String.format(detailedEndpoint, searchParam),
                         HttpMethod.GET, requestEntity, ItBookDetailedResponse.class).getBody()
-        );
+        ).map(ApiResponse::new);
     }
 
     /**
@@ -66,7 +67,7 @@ public class ItBookClient extends BookClientImpl<ItBookResponse> {
      * @return ItBookBookResponse
      */
     @Override
-    public Optional<ItBookResponse> last(Pageable pageable) {
+    public Optional<ApiResponse<ItBookResponse>> last(Pageable pageable) {
         if (pageable.getPageNumber() != 0) {
             return Optional.empty();
         }

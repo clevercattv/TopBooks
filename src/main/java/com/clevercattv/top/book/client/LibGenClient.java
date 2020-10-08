@@ -1,6 +1,7 @@
 package com.clevercattv.top.book.client;
 
-import com.clevercattv.top.book.dto.LibGenResponse;
+import com.clevercattv.top.book.dto.ApiResponse;
+import com.clevercattv.top.book.dto.client.LibGenResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -31,7 +32,7 @@ public class LibGenClient extends BookClientImpl<LibGenResponse> {
     }
 
     @Override
-    public Optional<LibGenResponse> last(Pageable pageable) {
+    public Optional<ApiResponse<LibGenResponse>> last(Pageable pageable) {
         String query = String.format(lastEndpoint,
                 pageable.getOffset(),
                 pageable.getPageSize(),
@@ -39,7 +40,9 @@ public class LibGenClient extends BookClientImpl<LibGenResponse> {
         );
         return Optional.ofNullable(restTemplate.exchange(
                 query, HttpMethod.GET, null, new ParameterizedTypeReference<List<LibGenResponse.Book>>() {
-                }).getBody()).map(LibGenResponse::new);
+                }).getBody())
+                .map(LibGenResponse::new)
+                .map(ApiResponse::new);
     }
 
 }
